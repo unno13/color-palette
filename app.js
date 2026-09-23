@@ -15,7 +15,10 @@ function buildTabButtons(categories) {
   `).join('');
 }
 
-function buildCard(palette) {
+function buildCard(palette, index) {
+  // 番号はdata.jsonの並び順から自動採番(01, 02, 03...)
+  const number = String(index + 1).padStart(2, '0');
+
   const swatches = palette.colors.map(c => `
     <div class="swatch" style="background-color: ${c.code};" data-color="${c.code}" title="${c.code}"></div>
   `).join('');
@@ -32,7 +35,7 @@ function buildCard(palette) {
 
   return `
     <div class="card">
-      <div class="card-number">${palette.number}</div>
+      <div class="card-number">${number}</div>
       <div class="card-title">${palette.title}</div>
       <div class="card-desc">${palette.desc}</div>
       <div class="color-swatches">${swatches}</div>
@@ -45,7 +48,7 @@ function buildTabContents(categories) {
   const main = document.getElementById('main-content');
   main.innerHTML = categories.map((cat, i) => `
     <div id="${cat.id}" class="tab-content palette-grid${i === 0 ? ' active' : ''}">
-      ${cat.palettes.map(buildCard).join('')}
+      ${cat.palettes.map((p, idx) => buildCard(p, idx)).join('')}
     </div>
   `).join('');
 }
