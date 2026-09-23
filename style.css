@@ -48,6 +48,11 @@ header p {
   flex-wrap: wrap;
 }
 
+.tab-container-bottom {
+  margin-top: 50px;
+  margin-bottom: 0;
+}
+
 .tab-btn {
   background-color: #ffffff;
   border: 2px solid var(--border-color);
@@ -91,7 +96,7 @@ header p {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
-  max-width: 1200px;
+  max-width: 1320px;
   margin: 0 auto;
 }
 
@@ -132,16 +137,16 @@ header p {
 }
 
 .card-title {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   margin-bottom: 8px;
 }
 
 .card-desc {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   color: #665753;
   margin-bottom: 20px;
-  height: 2.8em;
+  min-height: 2.8em;
 }
 
 .color-swatches {

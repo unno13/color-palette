@@ -6,8 +6,8 @@ async function loadData() {
   return res.json();
 }
 
-function buildTabButtons(categories) {
-  const container = document.getElementById('tab-container');
+function buildTabButtons(categories, containerId) {
+  const container = document.getElementById(containerId);
   container.innerHTML = categories.map((cat, i) => `
     <button class="tab-btn${i === 0 ? ' active' : ''}" data-tab="${cat.id}">
       <i class="${cat.icon}"></i> ${cat.label}
@@ -53,20 +53,56 @@ function buildTabContents(categories) {
   `).join('');
 }
 
+const ACTIVE_TAB_KEY = 'colorPaletteActiveTab';
+
 function setupTabSwitching() {
   const tabBtns = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
 
   tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
       const targetTab = btn.getAttribute('data-tab');
+      const isBottomTab = !!btn.closest('.tab-container-bottom');
+
+      // 上下どちらのタブ群も、同じdata-tabを持つボタンをまとめてactiveにする
+      tabBtns.forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-tab') === targetTab);
+      });
       tabContents.forEach(content => {
         content.classList.toggle('active', content.id === targetTab);
       });
+
+      // 開いていたタブを再読み込み時に復元できるよう保存
+      try {
+        localStorage.setItem(ACTIVE_TAB_KEY, targetTab);
+      } catch (e) {
+        // localStorageが使えない環境では無視する
+      }
+
+      // 下部タブで切り替えた場合はページ上部へ戻る
+      if (isBottomTab) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     });
+  });
+}
+
+function restoreActiveTab(categories) {
+  let savedTab = null;
+  try {
+    savedTab = localStorage.getItem(ACTIVE_TAB_KEY);
+  } catch (e) {
+    savedTab = null;
+  }
+
+  // 保存されたタブが存在しない、またはdata.json上に該当カテゴリがなければ何もしない(先頭タブのまま)
+  if (!savedTab || !categories.some(cat => cat.id === savedTab)) return;
+
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-tab') === savedTab);
+  });
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.toggle('active', content.id === savedTab);
   });
 }
 
@@ -101,8 +137,10 @@ function setupColorCopy() {
 async function init() {
   try {
     const data = await loadData();
-    buildTabButtons(data.categories);
+    buildTabButtons(data.categories, 'tab-container');
+    buildTabButtons(data.categories, 'tab-container-bottom');
     buildTabContents(data.categories);
+    restoreActiveTab(data.categories);
     setupTabSwitching();
     setupColorCopy();
   } catch (err) {
