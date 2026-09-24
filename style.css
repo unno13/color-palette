@@ -128,14 +128,6 @@ header p {
   box-shadow: 0 12px 25px rgba(74, 62, 61, 0.12);
 }
 
-.card-number {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #a08f88;
-  margin-bottom: 2px;
-  font-family: 'Courier Prime', monospace;
-}
-
 .card-title {
   font-size: 1.2rem;
   font-weight: 700;
@@ -159,10 +151,35 @@ header p {
 }
 
 .swatch {
+  position: relative;
   flex: 1;
   height: 100%;
   transition: flex 0.2s ease;
   cursor: pointer;
+}
+
+.swatch::after {
+  content: attr(data-color);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.swatch:hover::after {
+  opacity: 1;
 }
 
 .swatch:hover {
@@ -202,6 +219,7 @@ header p {
 .color-info {
   display: flex;
   flex-direction: column;
+  min-width: 0; /* flexアイテム内でtext-overflowを効かせるために必要 */
 }
 
 .color-name {
@@ -250,4 +268,20 @@ footer {
   padding: 60px 0;
   color: #887873;
   font-size: 0.95rem;
+}
+
+/* スマホ表示(768px未満)ではタイトルとスウォッチのみ表示 */
+@media (max-width: 767px) {
+  .card-desc,
+  .color-list {
+    display: none;
+  }
+
+  .color-swatches {
+    margin-bottom: 0;
+  }
+
+  .card-title {
+    margin-bottom: 12px;
+  }
 }
