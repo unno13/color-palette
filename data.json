@@ -3,7 +3,7 @@
     {
       "id": "retro",
       "label": "レトロパレット",
-      "icon": "fa-solid fa-compact-disc",
+      "icon": "disc-3.svg",
       "palettes": [
         {
           "title": "クリームソーダ",
@@ -274,7 +274,7 @@
     {
       "id": "japanese",
       "label": "和風パレット",
-      "icon": "fa-solid fa-fan",
+      "icon": "fan.svg",
       "palettes": [
         {
           "title": "東雲の空",
@@ -787,7 +787,7 @@
     {
       "id": "simple",
       "label": "シンプルパレット",
-      "icon": "fa-solid fa-leaf",
+      "icon": "coffee.svg",
       "palettes": [
         {
           "title": "北欧ナチュラル",
@@ -1058,7 +1058,7 @@
     {
       "id": "neo",
       "label": "ネオパレット",
-      "icon": "fa-solid fa-bolt",
+      "icon": "galaxy.svg",
       "palettes": [
         {
           "title": "サイバーパンクシティ",
@@ -1329,7 +1329,7 @@
     {
       "id": "animal",
       "label": "動物パレット",
-      "icon": "fa-solid fa-paw",
+      "icon": "paw-print.svg",
       "palettes": [
         {
           "title": "三毛猫",
@@ -1468,7 +1468,7 @@
     {
       "id": "yumemi",
       "label": "夢見パレット",
-      "icon": "fa-solid fa-moon",
+      "icon": "moon-star.svg",
       "palettes": [
         {
           "title": "病みかわリップ",

@@ -6,11 +6,32 @@ async function loadData() {
   return res.json();
 }
 
-function buildTabButtons(categories, containerId) {
+// icons/フォルダ内のSVGファイルを取得し、テキストとして返す
+async function loadIconSvg(filename) {
+  try {
+    const res = await fetch(`icons/${filename}`);
+    if (!res.ok) throw new Error(`${filename} の読み込みに失敗`);
+    return await res.text();
+  } catch (err) {
+    console.error('アイコン読み込みエラー:', err);
+    return '';
+  }
+}
+
+// data.json内で使われているアイコンファイルをまとめて先読みし、{ファイル名: SVG文字列} のマップを作る
+async function loadIcons(categories) {
+  const uniqueFiles = [...new Set(categories.map(cat => cat.icon))];
+  const pairs = await Promise.all(
+    uniqueFiles.map(async (file) => [file, await loadIconSvg(file)])
+  );
+  return Object.fromEntries(pairs);
+}
+
+function buildTabButtons(categories, containerId, iconMap) {
   const container = document.getElementById(containerId);
   container.innerHTML = categories.map((cat, i) => `
     <button class="tab-btn${i === 0 ? ' active' : ''}" data-tab="${cat.id}">
-      <i class="${cat.icon}"></i> ${cat.label}
+      <span class="tab-icon">${iconMap[cat.icon] || ''}</span> ${cat.label}
     </button>
   `).join('');
 }
@@ -133,8 +154,9 @@ function setupColorCopy() {
 async function init() {
   try {
     const data = await loadData();
-    buildTabButtons(data.categories, 'tab-container');
-    buildTabButtons(data.categories, 'tab-container-bottom');
+    const iconMap = await loadIcons(data.categories);
+    buildTabButtons(data.categories, 'tab-container', iconMap);
+    buildTabButtons(data.categories, 'tab-container-bottom', iconMap);
     buildTabContents(data.categories);
     restoreActiveTab(data.categories);
     setupTabSwitching();
